@@ -102,6 +102,19 @@
   font-size: 1.1rem;
 }
 
+/* services*/
+#services h3 {
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+}
+
+#services h3:hover {
+  color: #198754;
+}
+
 /* Footer */
 footer {
   background: #212529;
