@@ -96,6 +96,12 @@
   justify-content: center;
 }
 
+/* About */
+#about ul li {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
 /* Footer */
 footer {
   background: #212529;
