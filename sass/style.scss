@@ -87,6 +87,16 @@
 	width: 100%;
 }
 
+/* Hero */
+.hero {
+	background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+		url("../assets/images/bg.jpg") center/cover no-repeat;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 /* Footer */
 footer {
 	background: #212529;
