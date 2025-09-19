@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    /* ======================== Navbar + Footer ============================== */
+
     function loadComponent(id, file, errMsg) {
         fetch(file)
             .then(res => res.text())
@@ -28,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponent("footer", "../components/footer.html", "Error loading footer...");
 
     /* ===================================================================== */
+    /* ============================== Mapping ============================== */
 
     const map = L.map('map').setView([24.7136, 46.6753], 6);
 
@@ -68,6 +71,36 @@ document.addEventListener("DOMContentLoaded", () => {
             markers[city].openPopup();
         }
     });
-    
+
+    /* ===================================================================== */
+    /* ============================== Contact ============================== */
+
+    document.getElementById("contactForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+        const formAlert = document.getElementById("formAlert");
+
+        emailjs.send("service_bp2u60n", "template_vn9qw9l", {
+            from_name: name,
+            from_email: email,
+            message: message
+        }, "n_H-U2g8xl-LVWr-p")
+            .then(() => {
+                formAlert.className = "alert alert-success mt-3";
+                formAlert.textContent = "✅ تم إرسال الرسالة بنجاح!";
+                formAlert.classList.remove("d-none");
+                document.getElementById("contactForm").reset();
+            })
+            .catch((err) => {
+                formAlert.className = "alert alert-danger mt-3";
+                formAlert.textContent = "❌ حصل خطأ أثناء إرسال الرسالة!";
+                formAlert.classList.remove("d-none");
+                console.error("Error:", err);
+            });
+    });
+
     /* ===================================================================== */
 });

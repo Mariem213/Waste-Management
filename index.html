@@ -157,6 +157,42 @@
         </div>
     </section>
 
+    <!-- Contact Section -->
+    <section id="contact" class="py-5">
+        <div class="container">
+            <!-- <h2 class="mb-4 title">📩 Contact us</h2> -->
+            <h2 class="mb-5 title">Contact us</h2>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form id="contactForm" class="p-4 border rounded bg-white shadow-sm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-bold">Full Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter Your Name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">Email Address</label>
+                            <input type="email" class="form-control" id="email"
+                                placeholder="Enter Your Email : example@gmail.com" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="message" class="form-label fw-bold">Message</label>
+                            <textarea class="form-control" id="message" rows="5" placeholder="Write Your Message..."
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-custom-left-right btn-success w-100">Send</button>
+                    </form>
+
+                    <!-- Feedback message -->
+                    <div id="formAlert" class="alert mt-3 d-none"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer Section -->
     <div id="footer" class="z-100"></div>
 
@@ -165,6 +201,8 @@
     <!-- Map Library (LeafletJS) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Contact Library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <!-- Main JS -->
     <script src="JS/main.js"></script>
 </body>
