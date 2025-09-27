@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Management - Forget Passward</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/login.css">
+    <style>
+        .form {
+            width: 100%;
+        }
+
+        .submit {
+            margin: 1.5rem auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cont container w-25 h-25">
+        <div class="form m-auto" id="sign-in">
+            <h2>Reset Password</h2>
+            <label>
+                <span>Email</span>
+                <input type="email" id="forgotEmail" />
+                <small id="forgotEmailErr" class="error"></small>
+            </label>
+
+            <button type="button" id="resetBtn" class="submit">Reset Password</button>
+
+            <a href="./login.html">
+                <button type="button" class="submit">Sign In</button>
+            </a>
+
+
+            <!-- message area -->
+            <p id="msg" class="mt-3"></p>
+
+            <!-- hidden block to change password when email is found -->
+            <div id="newPassDiv" style="display:none" class="mt-3">
+                <label class="d-block mb-2">
+                    <span>New password</span>
+                    <input type="password" id="newPass" class="form-control" />
+                    <small id="newPassErr" class="error"></small>
+                </label>
+                <label class="d-block mb-2">
+                    <span>Confirm password</span>
+                    <input type="password" id="confirmPass" class="form-control" />
+                    <small id="confirmPassErr" class="error"></small>
+                </label>
+                <div class="mt-2">
+                    <button id="changeBtn" type="button" class="submit">Change Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // helpers
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        function clearText(id) { const el = document.getElementById(id); if (el) el.textContent = ""; }
+        function showMsg(text, cls = "error") {
+            const m = document.getElementById("msg");
+            m.textContent = text;
+            m.className = cls === "error" ? "text-danger" : "text-success";
+        }
+
+        // click handler
+        document.getElementById("resetBtn").addEventListener("click", recoverPassword);
+
+        function recoverPassword() {
+            // clear previous messages
+            clearText("forgotEmailErr");
+            clearText("newPassErr");
+            clearText("confirmPassErr");
+            showMsg("");
+
+            const email = document.getElementById("forgotEmail").value.trim();
+            if (!email) {
+                document.getElementById("forgotEmailErr").textContent = "Email is required.";
+                return;
+            }
+            if (!isValidEmail(email)) {
+                document.getElementById("forgotEmailErr").textContent = "Enter a valid email.";
+                return;
+            }
+
+            // get user from localStorage
+            const userJSON = localStorage.getItem("user");
+            if (!userJSON) {
+                showMsg("No registered users yet.", "error");
+                return;
+            }
+
+            const user = JSON.parse(userJSON);
+
+            // check the stored email (your stored key may be 'email')
+            if (user.email && user.email.toLowerCase() === email.toLowerCase()) {
+                // email exists -> show change password form
+                showMsg("Email found. Enter a new password below.", "success");
+                document.getElementById("newPassDiv").style.display = "block";
+
+                // optionally pre-focus
+                document.getElementById("newPass").focus();
+            } else {
+                showMsg("Email not found!", "error");
+            }
+        }
+
+        // change password flow
+        document.getElementById("changeBtn").addEventListener("click", function () {
+            clearText("newPassErr");
+            clearText("confirmPassErr");
+            showMsg("");
+
+            const newPass = document.getElementById("newPass").value.trim();
+            const confirmPass = document.getElementById("confirmPass").value.trim();
+
+            if (newPass.length < 6) {
+                document.getElementById("newPassErr").textContent = "Password must be at least 6 characters.";
+                return;
+            }
+            if (newPass !== confirmPass) {
+                document.getElementById("confirmPassErr").textContent = "Passwords do not match.";
+                return;
+            }
+
+            // update localStorage
+            const userJSON = localStorage.getItem("user");
+            if (!userJSON) {
+                showMsg("No user data found. Can't update password.", "error");
+                return;
+            }
+            const user = JSON.parse(userJSON);
+            user.password = newPass;
+            localStorage.setItem("user", JSON.stringify(user));
+
+            // if they were logged-in, you might want to log them out:
+            localStorage.removeItem("isLoggedIn");
+
+            showMsg("Password changed successfully. Please log in with your new password.", "success");
+
+            // redirect to login after a short delay
+            setTimeout(() => {
+                window.location.href = "./login.html";
+            }, 1500);
+        });
+
+    </script>
+</body>
+
+</html>
