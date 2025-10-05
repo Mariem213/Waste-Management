@@ -75,17 +75,50 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===================================================================== */
   /* ===================== Navbar login/logout switch ==================== */
 
+  // function updateAuthLink() {
+  //   const user = JSON.parse(localStorage.getItem("user"));
+  //   const authLink = document.getElementById("authLink");
+  //   if (localStorage.getItem("isLoggedIn") === "true") {
+  //     // authLink.textContent = "Logout";
+  //     authLink.innerHTML = `${user.name} | Logout`;
+  //     authLink.href = "index.html";
+  //     authLink.onclick = function () {
+  //       localStorage.removeItem("isLoggedIn");
+  //       window.location.href = "pages/login.html";
+  //     };
+  //   } else {
+  //     authLink.textContent = "Login";
+  //     authLink.href = "pages/login.html";
+  //     authLink.onclick = null;
+  //   }
+  // }
+
+  // updateAuthLink();
+
   function updateAuthLink() {
     const user = JSON.parse(localStorage.getItem("user"));
     const authLink = document.getElementById("authLink");
-    if (localStorage.getItem("isLoggedIn") === "true") {
-      // authLink.textContent = "Logout";
-      authLink.innerHTML = `${user.name} | Logout`;
-      authLink.href = "index.html";
-      authLink.onclick = function () {
-        localStorage.removeItem("isLoggedIn");
-        window.location.href = "pages/login.html";
-      };
+
+    if (localStorage.getItem("isLoggedIn") === "true" && user) {
+      authLink.innerHTML = `
+            <span id="userNameLink" style="cursor:pointer;">${user.name}</span>
+            <span style="color:white;"> | </span>
+            <span id="logoutLink" style="cursor:pointer; color: #0dc73bff;">Logout</span>
+        `;
+      authLink.href = "#";
+
+      document.addEventListener("click", function (e) {
+        if (e.target && e.target.id === "userNameLink") {
+          window.location.href = "pages/profile.html";
+        }
+        if (e.target && e.target.id === "logoutLink") {
+          localStorage.removeItem("isLoggedIn");
+          localStorage.removeItem("user");
+          alert("You have logged out successfully!");
+          window.location.href = "pages/login.html";
+        }
+      });
+
     } else {
       authLink.textContent = "Login";
       authLink.href = "pages/login.html";
@@ -95,10 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateAuthLink();
 
+
   /* ===================================================================== */
   /* ===================== Navbar active ==================== */
   document.addEventListener("DOMContentLoaded", () => {
-    const navLinks = document.querySelectorAll(".nav-link");
+    const navLinks = document.querySelectorAll(".link-item");
 
     const currentPage = window.location.pathname.split("/").pop();
 

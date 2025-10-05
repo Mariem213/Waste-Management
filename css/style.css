@@ -219,7 +219,7 @@ footer a:hover {
 }
 
 /*-----------------------------------------*/
-.nav-link {
+.link-item {
   position: relative;
   color: #fff !important;
   font-weight: 500;
@@ -227,7 +227,7 @@ footer a:hover {
   padding-bottom: 5px;
 }
 
-.nav-link::after {
+.link-item::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -244,8 +244,8 @@ footer a:hover {
   -o-transition: all 0.4s ease;
 }
 
-.nav-link:hover::after,
-.nav-link.active::after {
+.link-item:hover::after,
+.link-item.active::after {
   width: 60%;
 }
 
@@ -253,6 +253,6 @@ footer a:hover {
   color: #4caf50 !important;
 }
 
-.nav-link.active {
+.link-item.active {
   color: #4caf50 !important;
 }
