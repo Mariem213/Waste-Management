@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("userAge").textContent = user.age || "Not added";
         document.getElementById("userJob").textContent = user.job || "Not added";
 
+        document.getElementById("coinCount").textContent = user.coins || 0;
+
         const userImage = document.getElementById("userImage");
         if (user.image) {
             userImage.src = user.image;

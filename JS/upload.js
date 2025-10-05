@@ -6,8 +6,9 @@ const uploadBtn = document.getElementById("uploadBtn");
 const successAlert = document.getElementById("successAlert");
 const coinCount = document.getElementById("coinCount");
 
-let coins = localStorage.getItem("coins") ? parseInt(localStorage.getItem("coins")) : 0;
-coinCount.textContent = coins;
+// Get current logged-in user
+let user = JSON.parse(localStorage.getItem("user")) || {};
+coinCount.textContent = user.coins || 0;
 
 // Preview image
 imageInput.addEventListener("change", function () {
@@ -26,7 +27,7 @@ imageInput.addEventListener("change", function () {
 
 // Upload logic with rewards
 uploadBtn.addEventListener("click", function () {
-    if (imageInput.files.length === 0) {
+    if (!imageInput.files.length) {
         alert("Please select an image first!");
         return;
     }
@@ -39,13 +40,23 @@ uploadBtn.addEventListener("click", function () {
         uploadBtn.disabled = false;
         successAlert.style.display = "block";
 
-        // Add coins
-        coins += 10;
-        localStorage.setItem("coins", coins);
-        coinCount.textContent = coins;
+        // Add coins to user object
+        user.coins = (user.coins || 0) + 10;
+
+        // Save back to localStorage
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Also update in users array
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let idx = users.findIndex(u => u.email === user.email);
+        if (idx !== -1) {
+            users[idx].coins = user.coins;
+            localStorage.setItem("users", JSON.stringify(users));
+        }
+
+        coinCount.textContent = user.coins;
         coinCount.classList.add("coins-animate");
 
-        // Remove animation + hide alert after a while
         setTimeout(() => {
             coinCount.classList.remove("coins-animate");
             successAlert.style.display = "none";
