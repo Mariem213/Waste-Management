@@ -75,26 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===================================================================== */
   /* ===================== Navbar login/logout switch ==================== */
 
-  // function updateAuthLink() {
-  //   const user = JSON.parse(localStorage.getItem("user"));
-  //   const authLink = document.getElementById("authLink");
-  //   if (localStorage.getItem("isLoggedIn") === "true") {
-  //     // authLink.textContent = "Logout";
-  //     authLink.innerHTML = `${user.name} | Logout`;
-  //     authLink.href = "index.html";
-  //     authLink.onclick = function () {
-  //       localStorage.removeItem("isLoggedIn");
-  //       window.location.href = "pages/login.html";
-  //     };
-  //   } else {
-  //     authLink.textContent = "Login";
-  //     authLink.href = "pages/login.html";
-  //     authLink.onclick = null;
-  //   }
-  // }
-
-  // updateAuthLink();
-
   function updateAuthLink() {
     const user = JSON.parse(localStorage.getItem("user"));
     const authLink = document.getElementById("authLink");
@@ -114,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target && e.target.id === "logoutLink") {
           localStorage.removeItem("isLoggedIn");
           localStorage.removeItem("user");
+          // localStorage.removeItem("currentUserEmail");
           alert("You have logged out successfully!");
           window.location.href = "pages/login.html";
         }

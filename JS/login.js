@@ -112,6 +112,7 @@ document.getElementById("loginBtn").addEventListener("click", function () {
 
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("user", JSON.stringify(savedUser)); // store logged-in user
+    localStorage.setItem("currentUserEmail", savedUser.email);
 
     setTimeout(() => {
         window.location.href = "../index.html";
