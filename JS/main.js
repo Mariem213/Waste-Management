@@ -2,16 +2,22 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===================================================================== */
   /* ============================== Mapping ============================== */
 
-  const map = L.map('map').setView([24.7136, 46.6753], 6);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+  const map = L.map('map').setView([18.3053, 42.7360], 8);
+  +
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 
   const cities = {
-    riyadh: { coords: [24.7136, 46.6753], name: "الرياض" },
-    jeddah: { coords: [21.4858, 39.1925], name: "جدة" },
-    dammam: { coords: [26.4207, 50.0888], name: "الدمام" }
+    khamis_mushait: { coords: [18.3029, 42.7297], name: "مدينة خميس مشيط" },
+    abha: { coords: [18.2164, 42.5053], name: "مدينة أبها" },
+    al_mansak: { coords: [18.2216, 42.5278], name: "حي المنسك" },
+    al_badea: { coords: [18.2071, 42.5172], name: "حي البديع" },
+    king_khalid_uni: { coords: [18.2128, 42.6547], name: "جامعة الملك خالد - الفرعاء" },
+    al_harir: { coords: [18.2923, 42.6930], name: "حي الهرير" },
+    al_rasras: { coords: [18.2220, 42.5005], name: "حي الرصراص" },
+    al_safq: { coords: [18.2881, 42.7072], name: "حي الصفق" },
+    king_faisal_city: { coords: [18.2935, 42.6484], name: "مدينة الملك فيصل العسكرية" }
   };
 
   const markers = {};
@@ -37,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showAllCities();
     } else {
       const { coords } = cities[city];
-      map.flyTo(coords, 12, { animate: true, duration: 2 });
+      map.flyTo(coords, 13, { animate: true, duration: 2 });
       markers[city].openPopup();
     }
   });
