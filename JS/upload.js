@@ -58,7 +58,7 @@ uploadBtn.addEventListener("click", function () {
 
         // Add coins to user object
         user.coins = (user.coins || 0) + 10;
-        user.lastUploadDate = now.toISOString(); // 🔹 Save current time
+        user.lastUploadDate = now.toISOString();
 
         // Save back to localStorage
         localStorage.setItem("user", JSON.stringify(user));
