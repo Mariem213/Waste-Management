@@ -25,11 +25,27 @@ imageInput.addEventListener("change", function () {
     }
 });
 
-// Upload logic with rewards
+// Upload logic with time limit (one upload every 2 days)
 uploadBtn.addEventListener("click", function () {
     if (!imageInput.files.length) {
         alert("Please select an image first!");
         return;
+    }
+
+    // Check upload time limit
+    const now = new Date();
+    const lastUpload = user.lastUploadDate ? new Date(user.lastUploadDate) : null;
+
+    if (lastUpload) {
+        const diffInMs = now - lastUpload;
+        const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+        if (diffInDays < 1) {
+            const remainingHours = Math.ceil((1 - diffInDays) * 24);
+            alert(`⏳ You can upload again after ${remainingHours} hour(s).`);
+            return;
+        }
+
     }
 
     uploadBtn.innerText = "Uploading...";
@@ -42,6 +58,7 @@ uploadBtn.addEventListener("click", function () {
 
         // Add coins to user object
         user.coins = (user.coins || 0) + 10;
+        user.lastUploadDate = now.toISOString(); // 🔹 Save current time
 
         // Save back to localStorage
         localStorage.setItem("user", JSON.stringify(user));
@@ -51,6 +68,7 @@ uploadBtn.addEventListener("click", function () {
         let idx = users.findIndex(u => u.email === user.email);
         if (idx !== -1) {
             users[idx].coins = user.coins;
+            users[idx].lastUploadDate = user.lastUploadDate;
             localStorage.setItem("users", JSON.stringify(users));
         }
 
