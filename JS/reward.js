@@ -101,8 +101,8 @@ function buyBag(price, name, icon) {
 
 /* ========== Offers ========== */
 const offers = [
-    { name: "50% Off Small Bag", desc: "Buy a Small Bag for only 10 coins!", price: 10, expires: "2025-10-15T23:59:59" },
-    { name: "Buy 2 Get 1 Free", desc: "Buy 2 Medium Bags and get 1 free!", type: "bundle", expires: "2025-10-14T20:00:00" }
+    { name: "50% Off Small Bag", desc: "Buy a Small Bag for only 10 coins!", price: 10, expires: new Date(2025, 9, 19, 23, 59, 59) },
+    { name: "Buy 2 Get 1 Free", desc: "Buy 2 Medium Bags and get 1 free!", type: "bundle", expires: new Date(2025, 9, 25, 23, 59, 59) }
 ];
 
 /* Render Offers + Countdown Timer */
@@ -148,11 +148,16 @@ function startCountdown(expiryDate, elementId) {
             return;
         }
 
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
 
-        countdownEl.textContent = `⏳ Expires in: ${hours}h ${minutes}m ${seconds}s`;
+        if (days > 0) {
+            countdownEl.textContent = `⏳ Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        } else {
+            countdownEl.textContent = `⏳ Expires in: ${hours}h ${minutes}m ${seconds}s`;
+        }
     }
 
     updateCountdown();

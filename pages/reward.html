@@ -13,94 +13,283 @@
 
   <style>
     body {
-      background-color: #f4f7f5;
+      background-color: #f3f7f4;
       font-family: 'Poppins', sans-serif;
     }
 
     .rewards-container {
-      max-width: 800px;
-      margin: 80px auto;
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      padding: 30px;
-      text-align: center;
+      width: 90%;
+      max-width: 1400px;
+      margin: 70px auto;
+      background: #ffffff;
+      border-radius: 25px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      padding: 50px 60px;
     }
 
     .rewards-title {
-      color: #44634b;
-      font-weight: 600;
-      margin-bottom: 20px;
+      color: #3f6148;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    .text-muted {
+      text-align: center;
+      margin-bottom: 35px;
     }
 
     .stats-box {
-      background-color: #eaf3ec;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
-      font-size: 18px;
-      font-weight: 500;
+      background: linear-gradient(135deg, #e7f4e8, #dfeee0);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 40px;
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      color: #3f6148;
     }
 
-    .shop-section,
-    .offers-section {
-      text-align: left;
-      margin-top: 25px;
-    }
-
-    .bag-card {
-      background: #eaf3ec;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 10px 0;
-      transition: 0.3s;
+    h4.section-title {
+      color: #3f6148;
+      font-weight: 600;
+      margin-bottom: 25px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 10px;
+      font-size: 1.4rem;
     }
 
-    .bag-card:hover {
-      transform: scale(1.02);
-      background-color: #dfeee0;
+    /* Layout grid */
+    #shopItems,
+    #offersContainer,
+    #myBagsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
     }
 
-    .bag-info h5 {
-      color: #44634b;
-      margin-bottom: 5px;
+    .shop-card,
+    .offer-card,
+    .bag-item {
+      background: #f9faf9;
+      border: 1px solid #e1e8e3;
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      transition: 0.3s ease-in-out;
+    }
+
+    .shop-card:hover,
+    .offer-card:hover,
+    .bag-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .shop-card img,
+    .offer-card img,
+    .bag-item img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
     }
 
     .offer-card {
-      background-color: #fff9e6;
-      border: 2px dashed #ffc107;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 10px 0;
+      background: #fff9e6;
+      border: 2px dashed #f5c542;
     }
 
     .offer-card h5 {
-      color: #b58900;
+      color: #b58c00;
       margin-bottom: 8px;
+      font-size: 1.1rem;
     }
 
     .btn-buy {
-      background-color: #44634b;
+      background-color: #3f6148;
       color: #fff;
       border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 500;
       transition: 0.3s;
     }
 
     .btn-buy:hover {
-      background-color: #36533b;
+      background-color: #2d4833;
     }
 
-    footer {
-      color: white;
+    .mybags-section .bag-item {
+      background-color: #eaf3ec;
+    }
+
+    .shop-section {
+      background-color: #f8f5f1;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #4b2e05;
+      margin-bottom: 25px;
       text-align: center;
-      padding: 15px 0;
+      font-size: 1.6rem;
+    }
+
+    .shop-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    .shop-card,
+    .bag-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 15px;
+      width: 100%;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .shop-card img {
+      width: 100%;
+      height: 180px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .shop-card h5,
+    .bag-info h5 {
+      color: #2e8b57;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    .shop-card p,
+    .bag-info p {
+      color: #7b5e32;
+      margin: 5px 0 10px;
+    }
+
+    .shop-card p span .bag-info p span {
+      color: #c59d5f;
+      font-weight: bold;
+    }
+
+    .btn-buy {
+      background-color: #c59d5f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-buy:hover {
+      background-color: #4b2e05;
+      transform: scale(1.05);
+    }
+
+    .shop-section {
+      background-color: #f1f8f3;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #2e8b57;
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 1.6rem;
+    }
+
+    .shop-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    .shop-card {
+      background: #ffffff;
+      border-radius: 15px;
+      padding: 20px;
+      width: 250px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(46, 139, 87, 0.1);
+      border: 1px solid rgba(46, 139, 87, 0.15) !important;
+    }
+
+    .shop-card img {
+      width: 100%;
+      height: 180px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .shop-card h5 {
+      color: #2e8b57;
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .shop-card p {
+      color: #4e6e58;
+      margin: 5px 0 10px;
+      font-size: 0.95rem;
+    }
+
+    .shop-card p span {
+      color: #2e8b57;
+      font-weight: bold;
+    }
+
+    .btn-buy {
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-buy:hover {
+      background-color: #256d45;
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(46, 139, 87, 0.25);
+    }
+
+    .shop-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 18px rgba(46, 139, 87, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .rewards-container {
+        padding: 30px 20px;
+        width: 95%;
+      }
     }
   </style>
+
+
 </head>
 
 <body>
@@ -125,18 +314,16 @@
   </nav>
 
   <!-- Rewards Container -->
-  <div class="rewards-container">
+  <!-- <div class="rewards-container">
     <h3 class="rewards-title">🎁 Rewards & Shop</h3>
     <p class="text-muted">Exchange your coins for eco-friendly bags and enjoy our special offers 🌿</p>
 
-    <!-- User Stats -->
     <div class="stats-box">
       💰 Coins: <span id="userCoins">0</span> | 🛍️ Bags: <span id="userBags">0</span>
     </div>
 
     <hr>
 
-    <!-- Shop Section -->
     <div class="shop-section">
       <h4 class="mb-3">🛒 Shop Bags</h4>
       <div id="shopItems"></div>
@@ -144,7 +331,6 @@
 
     <hr>
 
-    <!-- Offers Section -->
     <div class="offers-section">
       <h4 class="mb-3"><i class="fa-solid fa-tags" style="color:#c59d5f;"></i> Special Offers</h4>
       <div id="offersContainer"></div>
@@ -152,7 +338,6 @@
 
     <hr>
 
-    <!-- My Bags Section -->
     <div class="mybags-section mt-4">
       <h4 class="mb-3"><i class="fa-solid fa-box-open" style="color:#c59d5f;"></i> My Bags</h4>
       <div id="myBagsContainer"></div>
@@ -160,6 +345,76 @@
 
 
     <a href="upload.html" class="btn btn-success mt-4">Back to Upload</a>
+  </div> -->
+
+  <div class="rewards-container">
+    <h3 class="rewards-title">🎁 Rewards & Shop</h3>
+    <p class="text-muted">Exchange your coins for eco-friendly bags and enjoy our special offers 🌿</p>
+
+    <div class="stats-box">
+      💰 Coins: <span id="userCoins">0</span> | 🛍️ Bags: <span id="userBags">0</span>
+    </div>
+
+    <!-- Shop Section -->
+    <div class="shop-section mb-5">
+      <h4 class="section-title">
+        <i class="fa-solid fa-store" style="color:#2e8b57;"></i> Shop Bags
+      </h4>
+      <div id="shopItems" class="shop-grid">
+        <div class="shop-card">
+          <h5>Eco Bag</h5>
+          <p>Price: <span>50 Coins</span></p>
+          <button class="btn-buy">Buy Now</button>
+        </div>
+        <div class="shop-card">
+          <h5>Green Bag</h5>
+          <p>Price: <span>70 Coins</span></p>
+          <button class="btn-buy">Buy Now</button>
+        </div>
+        <div class="shop-card">
+          <h5>Classic Bag</h5>
+          <p>Price: <span>90 Coins</span></p>
+          <button class="btn-buy">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Offers Section -->
+    <div class="offers-section mb-4">
+      <h4 class="section-title"><i class="fa-solid fa-tags"></i> Special Offers</h4>
+      <div id="offersContainer">
+        <div class="offer-card">
+          <!-- <img src="../images/offer1.jpg" alt="Offer"> -->
+          <h5>20% Off on Recycle Products</h5>
+          <p>Expires in 2 Days</p>
+          <button class="btn-buy">Claim Offer</button>
+        </div>
+        <div class="offer-card">
+          <!-- <img src="../images/offer2.jpg" alt="Offer"> -->
+          <h5>Free Eco Bag on 200 Coins</h5>
+          <p>Expires in 1 Day</p>
+          <button class="btn-buy">Claim Offer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Bags Section -->
+    <div class="mybags-section mb-4">
+      <h4 class="section-title"><i class="fa-solid fa-box-open"></i> My Bags</h4>
+      <div id="myBagsContainer">
+        <div class="bag-item">
+          <img src="../images/bag3.jpg" alt="My Bag">
+          <h5>Eco Carry Bag</h5>
+          <p>Status: Received</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="upload.html" class="btn btn-success px-4">Back to Upload</a>
+    </div>
   </div>
 
   <!-- Footer -->
