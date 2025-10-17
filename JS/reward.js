@@ -1,13 +1,31 @@
 /* ===================================================================== */
 /* ===================== Reward System ===================== */
 
+/* ---------- Firebase Setup ---------- */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCgCqfrsAXoHwjeazTpVtd8XEUyK9mGcao",
+    authDomain: "waste-management-95ebe.firebaseapp.com",
+    projectId: "waste-management-95ebe",
+    storageBucket: "waste-management-95ebe.appspot.com",
+    messagingSenderId: "534711192041",
+    appId: "1:534711192041:web:9d67edfdc61f0d5fe52378",
+    measurementId: "G-3JV7GP67NR"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ---------- DOM Elements ---------- */
 const userCoins = document.getElementById("userCoins");
 const userBags = document.getElementById("userBags");
 const shopItems = document.getElementById("shopItems");
 const offersContainer = document.getElementById("offersContainer");
 const myBagsContainer = document.getElementById("myBagsContainer");
 
-/* ========== Get & Validate User Data ========== */
+/* ---------- Get & Validate User Data ---------- */
 let rawUser = localStorage.getItem("user");
 let user;
 
@@ -21,7 +39,7 @@ if (rawUser) {
     user = { name: "Guest", coins: 100, bags: [] };
 }
 
-// Coins & Bags setup (ensure valid types)
+// Coins & Bags setup
 let coins = typeof user.coins === "number" ? user.coins : Number(user.coins) || 0;
 
 // Guarantee bags is an array
@@ -45,7 +63,7 @@ user.coins = coins;
 user.bags = bags;
 localStorage.setItem("user", JSON.stringify(user));
 
-/* ========== Display User Info ========== */
+/* ---------- Display User Info ---------- */
 function displayUserInfo() {
     const availableCount = Array.isArray(bags)
         ? bags.filter(b => !b.received).length
@@ -54,16 +72,33 @@ function displayUserInfo() {
     userBags.textContent = availableCount;
 }
 
-/* ========== Update User Data ========== */
-function updateUserData() {
+/* ---------- Update User Data (Local + Firebase) ---------- */
+async function updateUserData() {
     user.coins = coins;
     user.bags = bags;
     localStorage.setItem("user", JSON.stringify(user));
     displayUserInfo();
     displayMyBags();
+
+    // ✅ تحديث البيانات في Firebase
+    try {
+        const uid = localStorage.getItem("currentUserUID");
+        if (uid) {
+            const userRef = doc(db, "users", uid);
+            await updateDoc(userRef, {
+                coins: user.coins,
+                bags: user.bags
+            });
+            console.log("✅ User data updated in Firestore.");
+        } else {
+            console.warn("⚠️ No UID found — skipping Firestore update.");
+        }
+    } catch (err) {
+        console.error("❌ Error updating Firestore:", err);
+    }
 }
 
-/* ========== Shop Items ========== */
+/* ---------- Shop Items ---------- */
 const bagsList = [
     { name: "Small Bag", price: 20, icon: "fa-bag-shopping" },
     { name: "Medium Bag", price: 40, icon: "fa-shopping-bag" },
@@ -77,18 +112,18 @@ function displayShop() {
         const div = document.createElement("div");
         div.classList.add("bag-card");
         div.innerHTML = `
-            <div class="bag-info">
-                <h5><i class="fa-solid ${item.icon}"></i> ${item.name}</h5>
-                <p class="text-muted">Price: ${item.price} coins</p>
-            </div>
-            <button class="btn-buy" onclick="buyBag(${item.price}, '${item.name}', '${item.icon}')">Buy</button>
-        `;
+      <div class="bag-info">
+        <h5><i class="fa-solid ${item.icon}"></i> ${item.name}</h5>
+        <p class="text-muted">Price: ${item.price} coins</p>
+      </div>
+      <button class="btn-buy" onclick="buyBag(${item.price}, '${item.name}', '${item.icon}')">Buy</button>
+    `;
         shopItems.appendChild(div);
     });
 }
 
 /* Buy Bag */
-function buyBag(price, name, icon) {
+window.buyBag = function (price, name, icon) {
     if (coins >= price) {
         coins -= price;
         bags.push({ name, icon, received: false });
@@ -97,12 +132,22 @@ function buyBag(price, name, icon) {
     } else {
         alert("❌ Not enough coins!");
     }
-}
+};
 
-/* ========== Offers ========== */
+/* ---------- Offers ---------- */
 const offers = [
-    { name: "50% Off Small Bag", desc: "Buy a Small Bag for only 10 coins!", price: 10, expires: new Date(2025, 9, 19, 23, 59, 59) },
-    { name: "Buy 2 Get 1 Free", desc: "Buy 2 Medium Bags and get 1 free!", type: "bundle", expires: new Date(2025, 9, 25, 23, 59, 59) }
+    {
+        name: "50% Off Small Bag",
+        desc: "Buy a Small Bag for only 10 coins!",
+        price: 10,
+        expires: new Date(2025, 9, 19, 23, 59, 59)
+    },
+    {
+        name: "Buy 2 Get 1 Free",
+        desc: "Buy 2 Medium Bags and get 1 free!",
+        type: "bundle",
+        expires: new Date(2025, 9, 25, 23, 59, 59)
+    }
 ];
 
 /* Render Offers + Countdown Timer */
@@ -116,16 +161,16 @@ function displayOffers() {
         const isActive = isOfferActive(offer.expires);
 
         div.innerHTML = `
-            <h5>${offer.name}</h5>
-            <p>${offer.desc}</p>
-            <small id="${countdownId}" class="text-muted"></small><br><br>
-            ${isActive
+      <h5>${offer.name}</h5>
+      <p>${offer.desc}</p>
+      <small id="${countdownId}" class="text-muted"></small><br><br>
+      ${isActive
                 ? offer.type === "bundle"
                     ? `<button class="btn-buy" onclick="applyBundleOffer()">Apply Offer</button>`
                     : `<button class="btn-buy" onclick="buyBag(${offer.price}, 'Small Bag', 'fa-bag-shopping')">Buy Now</button>`
                 : `<button class="btn-buy" disabled>Expired ❌</button>`
             }
-        `;
+    `;
         offersContainer.appendChild(div);
 
         // Start countdown timer
@@ -144,7 +189,7 @@ function startCountdown(expiryDate, elementId) {
 
         if (diff <= 0) {
             countdownEl.textContent = "❌ Offer expired";
-            displayOffers(); // refresh to disable button
+            displayOffers();
             return;
         }
 
@@ -153,11 +198,10 @@ function startCountdown(expiryDate, elementId) {
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
 
-        if (days > 0) {
-            countdownEl.textContent = `⏳ Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
-        } else {
-            countdownEl.textContent = `⏳ Expires in: ${hours}h ${minutes}m ${seconds}s`;
-        }
+        countdownEl.textContent =
+            days > 0
+                ? `⏳ Expires in: ${days}d ${hours}h ${minutes}m ${seconds}s`
+                : `⏳ Expires in: ${hours}h ${minutes}m ${seconds}s`;
     }
 
     updateCountdown();
@@ -165,7 +209,7 @@ function startCountdown(expiryDate, elementId) {
 }
 
 /* Apply Bundle Offer */
-function applyBundleOffer() {
+window.applyBundleOffer = function () {
     const mediumBag = bagsList.find(b => b.name === "Medium Bag");
     const totalPrice = mediumBag.price * 2;
 
@@ -179,7 +223,7 @@ function applyBundleOffer() {
     } else {
         alert("❌ Not enough coins for this offer.");
     }
-}
+};
 
 /* Offer Status */
 function isOfferActive(expiryDate) {
@@ -188,7 +232,7 @@ function isOfferActive(expiryDate) {
     return now < expire;
 }
 
-/* ===================== My Bags Section ===================== */
+/* ---------- My Bags Section ---------- */
 function displayMyBags() {
     myBagsContainer.innerHTML = "";
     if (!Array.isArray(bags) || bags.length === 0) {
@@ -200,28 +244,28 @@ function displayMyBags() {
         const div = document.createElement("div");
         div.classList.add("bag-card");
         div.innerHTML = `
-            <div class="bag-info">
-                <h5><i class="fa-solid ${bag.icon}" style="color:#44634b;"></i> ${bag.name}</h5>
-            </div>
-            ${!bag.received
+      <div class="bag-info">
+        <h5><i class="fa-solid ${bag.icon}" style="color:#44634b;"></i> ${bag.name}</h5>
+      </div>
+      ${!bag.received
                 ? `<button class="btn-buy" onclick="claimBag(${index})">Claim</button>`
                 : `<span class="text-success fw-bold">✅ Claimed</span>`
             }
-        `;
+    `;
         myBagsContainer.appendChild(div);
     });
 }
 
 /* Claim Bag */
-function claimBag(index) {
+window.claimBag = function (index) {
     if (bags[index]) {
         bags[index].received = true;
         updateUserData();
         alert(`🎉 You claimed your ${bags[index].name}!`);
     }
-}
+};
 
-/* ========== Initialize ========== */
+/* ---------- Initialize ---------- */
 displayUserInfo();
 displayShop();
 displayOffers();

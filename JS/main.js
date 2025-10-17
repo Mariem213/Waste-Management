@@ -100,9 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target && e.target.id === "logoutLink") {
           localStorage.removeItem("isLoggedIn");
           localStorage.removeItem("user");
-          // localStorage.removeItem("currentUserEmail");
           alert("You have logged out successfully!");
-          window.location.href = "pages/login.html";
+          window.location.href = "../index.html";
         }
       });
 

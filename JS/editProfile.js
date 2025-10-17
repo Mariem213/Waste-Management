@@ -1,93 +1,104 @@
-// Load existing user data when page opens
-window.onload = function () {
-    // const user = JSON.parse(localStorage.getItem("user")) || {};
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
-    // 1. Load current user data
-    const currentEmail = localStorage.getItem("currentUserEmail");
-    const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const currentUser = allUsers.find(u => u.email === currentEmail);
+// Firebase config
+const firebaseConfig = {
+    apiKey: "AIzaSyCgCqfrsAXoHwjeazTpVtd8XEUyK9mGcao",
+    authDomain: "waste-management-95ebe.firebaseapp.com",
+    projectId: "waste-management-95ebe",
+    storageBucket: "waste-management-95ebe.appspot.com",
+    messagingSenderId: "534711192041",
+    appId: "1:534711192041:web:9d67edfdc61f0d5fe52378",
+    measurementId: "G-3JV7GP67NR"
+};
 
-    if (!currentUser) {
-        alert("No user data found! Redirecting to login...");
+// Init Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Load user data
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        alert("You must log in first!");
         window.location.href = "login.html";
         return;
     }
 
-    // document.getElementById("userName").value = user.name || "";
-    // document.getElementById("userEmail").value = user.email || "";
-    // document.getElementById("userGender").value = user.gender || "";
+    try {
+        const uid = user.uid;
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
 
-    // 2. Populate form fields with existing data
-    document.getElementById("userName").value = currentUser.name || "";
-    document.getElementById("userEmail").value = currentUser.email || "";
-    document.getElementById("userGender").value = currentUser.gender || "";
-    document.getElementById("userPhone").value = currentUser.phone || "";
-    document.getElementById("userAddress").value = currentUser.address || "";
-    document.getElementById("userAge").value = currentUser.age || "";
-    document.getElementById("userJob").value = currentUser.job || "";
-};
-
-// Handle Save
-document.getElementById("editProfileForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    // Get the existing user data first
-    // const oldUser = JSON.parse(localStorage.getItem("user")) || {};
-
-    // Create a copy so we don’t lose old fields (like password, visit count, etc.)
-    // const updatedUser = { ...oldUser };
-
-    const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const currentEmail = localStorage.getItem("currentUserEmail");
-    const userIndex = allUsers.findIndex(u => u.email === currentEmail);
-
-    if (userIndex === -1) {
-        alert("User not found!");
-        return;
-    }
-
-    const updatedUser = { ...allUsers[userIndex] }; // Copy old data
-
-
-    // Update only editable fields
-    updatedUser.name = document.getElementById("userName").value.trim();
-    updatedUser.email = document.getElementById("userEmail").value.trim();
-    updatedUser.gender = document.getElementById("userGender").value;
-    updatedUser.phone = document.getElementById("userPhone").value.trim();
-    updatedUser.address = document.getElementById("userAddress").value.trim();
-    updatedUser.age = document.getElementById("userAge").value;
-    updatedUser.job = document.getElementById("userJob").value.trim();
-
-
-    // Handle image update
-    const fileInput = document.getElementById("userImage");
-    if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            updatedUser.image = event.target.result;
-            // saveProfile(updatedUser);
-            saveUpdatedUser(allUsers, userIndex, updatedUser);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-    } else {
-        // saveProfile(updatedUser);
-        saveUpdatedUser(allUsers, userIndex, updatedUser);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            document.getElementById("userName").value = data.name || "";
+            document.getElementById("userEmail").value = user.email;
+            document.getElementById("userGender").value = data.gender || "";
+            document.getElementById("userPhone").value = data.phone || "";
+            document.getElementById("userAddress").value = data.address || "";
+            document.getElementById("userAge").value = data.age || "";
+            document.getElementById("userJob").value = data.job || "";
+        } else {
+            alert("No user data found in Firestore!");
+        }
+    } catch (error) {
+        console.error("🔥 Error loading user data:", error);
+        alert("❌ Failed to load user data.");
     }
 });
 
-// function saveProfile(user) {
-//     localStorage.setItem("user", JSON.stringify(user));
-//     alert("✅ Profile updated successfully!");
-//     window.location.href = "profile.html";
-// }
+// Handle Save Changes
+document.getElementById("editProfileForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-// 4. Save updated user to localStorage
-function saveUpdatedUser(allUsers, index, updatedUser) {
-    allUsers[index] = updatedUser; // Update user in array
-    localStorage.setItem("users", JSON.stringify(allUsers));
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    localStorage.setItem("currentUserEmail", updatedUser.email);
+    const user = auth.currentUser;
+    if (!user) return alert("No user logged in!");
 
-    alert("✅ Profile updated successfully!");
-    window.location.href = "profile.html";
-}
+    const uid = user.uid;
+    const userRef = doc(db, "users", uid);
+
+    // Read form fields
+    const updatedData = {
+        name: document.getElementById("userName").value.trim(),
+        gender: document.getElementById("userGender").value,
+        phone: document.getElementById("userPhone").value.trim(),
+        address: document.getElementById("userAddress").value.trim(),
+        age: document.getElementById("userAge").value.trim(),
+        job: document.getElementById("userJob").value.trim(),
+    };
+
+    console.log("📤 Will update Firestore with:", updatedData);
+
+    try {
+        const fileInput = document.getElementById("userImage");
+
+        // If there's an image, convert to Base64 first
+        if (fileInput.files.length > 0) {
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                updatedData.image = event.target.result;
+
+                try {
+                    await updateDoc(userRef, updatedData);
+                    alert("✅ Profile updated successfully!");
+                    window.location.href = "profile.html";
+                } catch (error) {
+                    console.error("🔥 Firestore update error:", error);
+                    alert("❌ Failed to update profile. Check console for details.");
+                }
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            // Update text fields only
+            await updateDoc(userRef, updatedData);
+            alert("✅ Profile updated successfully!");
+            window.location.href = "profile.html";
+        }
+    } catch (error) {
+        console.error("🔥 Firestore update error:", error);
+        alert("❌ Failed to update profile. Please check console.");
+    }
+});
