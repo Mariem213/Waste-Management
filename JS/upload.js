@@ -106,3 +106,16 @@ uploadBtn.addEventListener("click", async function () {
         }
     }, 1500);
 });
+
+// ---------- Navbar Dashboard ----------
+const currentUser = JSON.parse(localStorage.getItem("user"));
+
+const dashboardLink = document.getElementById("dashboardLink");
+if (dashboardLink) {
+    dashboardLink.style.display = (currentUser && currentUser.role === "admin") ? "block" : "none";
+}
+
+const uploadLink = document.querySelector('a[href="upload.html"]')?.parentElement;
+if (uploadLink) {
+    uploadLink.style.display = (currentUser && currentUser.role === "admin") ? "none" : "block";
+}

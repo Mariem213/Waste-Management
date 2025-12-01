@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let name = document.getElementById("regName").value.trim();
         let email = document.getElementById("regEmail").value.trim();
         let password = document.getElementById("regPassword").value.trim();
+        let role = document.getElementById("regRole").value;
 
         // Clear errors
         document.getElementById("regNameErr").textContent = "";
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const firebaseUser = userCredential.user;
 
-            // Save additional info in Firestore
+            // Save additional info in Firestore with role
             await setDoc(doc(db, "users", firebaseUser.uid), {
                 name,
                 email,
@@ -79,11 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 age: "",
                 job: "",
                 coins: 0,
-                image: ""
+                image: "",
+                role
             });
 
             // Save safe user info locally
-            const safeUser = { uid: firebaseUser.uid, name, email };
+            const safeUser = { uid: firebaseUser.uid, name, email, role };
             localStorage.setItem("isLoggedIn", "true");
             localStorage.setItem("user", JSON.stringify(safeUser));
             localStorage.setItem("currentUserUID", firebaseUser.uid);
@@ -92,7 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("regMsg").className = "success";
 
             setTimeout(() => {
-                window.location.href = "../index.html";
+                console.log("USER Register DATA:", safeUser.role);
+                // Redirect based on role
+                if (safeUser.role === "admin") {
+                    window.location.href = "./admin-dashboard.html";
+                } else {
+                    window.location.href = "../index.html";
+                }
             }, 1000);
 
         } catch (error) {
@@ -141,7 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("loginMsg").className = "success";
 
             setTimeout(() => {
-                window.location.href = "../index.html";
+                console.log("USER Login DATA:", userData.role);
+                // Redirect based on role
+                if (userData.role === "admin") {
+                    window.location.href = "./admin-dashboard.html";
+                } else {
+                    window.location.href = "../index.html";
+                }
             }, 1000);
 
         } catch (error) {

@@ -80,7 +80,6 @@ async function updateUserData() {
     displayUserInfo();
     displayMyBags();
 
-    // ✅ تحديث البيانات في Firebase
     try {
         const uid = localStorage.getItem("currentUserUID");
         if (uid) {

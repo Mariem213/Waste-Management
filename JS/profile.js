@@ -76,4 +76,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error fetching user data:", error);
         alert("Error loading profile data.");
     }
+
+    // ---------- Navbar Dashboard ----------
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+
+    const dashboardLink = document.getElementById("dashboardLink");
+    if (dashboardLink) {
+        dashboardLink.style.display = (currentUser && currentUser.role === "admin") ? "block" : "none";
+    }
+
+    const uploadLink = document.querySelector('a[href="upload.html"]')?.parentElement;
+    if (uploadLink) {
+        uploadLink.style.display = (currentUser && currentUser.role === "admin") ? "none" : "block";
+    }
+
+    // ---------- Coin Item ----------
+    const coinCountEl = document.getElementById("coinCount");
+    if (coinCountEl) {
+        coinCountEl.parentElement.style.display = (currentUser && currentUser.role === "admin") ? "none" : "block";
+    }
+
 });

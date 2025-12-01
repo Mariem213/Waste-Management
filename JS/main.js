@@ -134,4 +134,52 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  /* ===================================================================== */
+  /* ===================== Navbar Dashboard ==================== */
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
+  const dashboardLink = document.getElementById("dashboardLink");
+  if (dashboardLink) {
+    dashboardLink.style.display = (currentUser && currentUser.role === "admin") ? "block" : "none";
+  }
+
+  const uploadLink = document.querySelector('a[href="pages/upload.html"]')?.parentElement;
+  if (uploadLink) {
+    uploadLink.style.display = (currentUser && currentUser.role === "admin") ? "none" : "block";
+  }
+
+  /* ===================================================================== */
+  /* ===================== Upload Button Action ==================== */
+  const uploadBtn = document.querySelector('a[href="pages/upload.html"].btn-success');
+  if (uploadBtn) {
+    uploadBtn.addEventListener("click", (e) => {
+      if (currentUser && currentUser.role === "admin") {
+        e.preventDefault();
+        showToast("Admins cannot upload waste. Please login as a user.");
+      }
+    });
+  }
+
+  function showToast(message) {
+    const toastEl = document.createElement("div");
+    toastEl.className = "toast-message";
+    toastEl.textContent = message;
+    toastEl.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 9999;
+        `;
+    document.body.appendChild(toastEl);
+
+    setTimeout(() => {
+      toastEl.remove();
+    }, 3000);
+  }
+
 });

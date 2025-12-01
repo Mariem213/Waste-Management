@@ -102,3 +102,15 @@ document.getElementById("editProfileForm").addEventListener("submit", async (e) 
         alert("❌ Failed to update profile. Please check console.");
     }
 });
+
+
+// ---------- Navbar Dashboard ----------
+const dashboardLink = document.getElementById("dashboardLink");
+if (dashboardLink) {
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    if (currentUser && currentUser.role === "admin") {
+        dashboardLink.style.display = "block";
+    } else {
+        dashboardLink.style.display = "none";
+    }
+}

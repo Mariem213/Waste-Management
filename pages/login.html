@@ -18,6 +18,24 @@
             font-size: 14px;
             margin-top: 5px;
         }
+
+        #regRole {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background-color: #f5f5f5;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s all;
+        }
+
+        #regRole:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            background-color: #fff;
+        }
     </style>
 </head>
 
@@ -71,6 +89,14 @@
                     <span>Password</span>
                     <input type="password" id="regPassword" />
                     <small id="regPassErr" class="error"></small>
+                </label>
+                <label>
+                    <span>Role</span>
+                    <select id="regRole">
+                        <option value="user" selected>User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <small id="regRoleErr" class="error"></small>
                 </label>
                 <button type="button" class="submit" id="registerBtn">Sign Up</button>
                 <p id="regMsg"></p>

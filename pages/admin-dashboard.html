@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            Admin Panel
+        </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-item active" data-target="dashboardSection">Dashboard</li>
+            <li class="sidebar-item" data-target="usersSection">Users</li>
+            <li class="sidebar-item" data-target="adminsSection">Admins</li>
+            <li class="sidebar-item" data-target="ordersSection">Orders</li>
+            <li class="sidebar-item" id="goToProfile">Profile</li>
+            <li id="logoutBtn">Logout</li>
+        </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <header class="topbar">
+            <h1>Dashboard</h1>
+            <div class="profile">
+                <span id="adminName">Admin</span>
+            </div>
+        </header>
+
+        <!-- Sections -->
+        <section id="dashboardSection" class="dashboard-section">
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Users</h3>
+                    <p id="totalUsers">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Admins</h3>
+                    <p id="totalAdmins">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total User Coins</h3>
+                    <p id="totalUserCoins">0</p>
+                </div>
+            </div>
+            <h2 style="margin: 5rem 0 2rem ;">Users Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Coins</th>
+                        <th>Bags</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable"></tbody>
+            </table>
+            <h2 style="margin: 5rem 0 2rem ;">Admins Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody id="adminsTable"></tbody>
+            </table>
+        </section>
+
+        <section id="usersSection" class="dashboard-section" style="display:none;">
+            <h2>All Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Profile</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Age</th>
+                        <th>Job</th>
+                        <th>Coins</th>
+                        <th>Bags</th>
+                    </tr>
+                </thead>
+                <tbody id="allUsersTable"></tbody>
+            </table>
+        </section>
+
+        <section id="adminsSection" class="dashboard-section" style="display:none;">
+            <h2>All Admins</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Profile</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Age</th>
+                        <th>Job</th>
+                    </tr>
+                </thead>
+                <tbody id="allAdminsTable"></tbody>
+            </table>
+        </section>
+
+        <section id="ordersSection" class="dashboard-section" style="display:none;">
+            <h2>Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>User</th>
+                        <th>Coins Used</th>
+                        <th>Bags Ordered</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTable"></tbody>
+            </table>
+        </section>
+
+        <section id="profileSection" class="dashboard-section" style="display:none;">
+            <h2>My Profile</h2>
+            <div class="profile-container">
+                <div class="profile-image">
+                    <img id="profileImage" src="https://via.placeholder.com/100" alt="Profile">
+                </div>
+                <div class="profile-details">
+                    <p><strong>Name:</strong> <span id="profileName"></span></p>
+                    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                    <p><strong>Gender:</strong> <span id="profileGender"></span></p>
+                    <p><strong>Phone:</strong> <span id="profilePhone"></span></p>
+                    <p><strong>Address:</strong> <span id="profileAddress"></span></p>
+                    <p><strong>Age:</strong> <span id="profileAge"></span></p>
+                    <p><strong>Job:</strong> <span id="profileJob"></span></p>
+                    <button id="editProfileBtn">Edit Profile</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Edit Modal -->
+        <div id="editProfileModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <h2>Edit Profile</h2>
+                <form id="editProfileForm">
+                    <label>Name:</label>
+                    <input type="text" id="editName">
+                    <label>Email:</label>
+                    <input type="email" id="editEmail">
+                    <label>Gender:</label>
+                    <input type="text" id="editGender">
+                    <label>Phone:</label>
+                    <input type="text" id="editPhone">
+                    <label>Address:</label>
+                    <input type="text" id="editAddress">
+                    <label>Age:</label>
+                    <input type="text" id="editAge">
+                    <label>Job:</label>
+                    <input type="text" id="editJob">
+                    <label>Profile Image URL:</label>
+                    <input type="text" id="editImage">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="../js/admin-dashboard.js"></script>
+</body>
+
+</html>
