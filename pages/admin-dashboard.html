@@ -19,6 +19,7 @@
             <li class="sidebar-item active" data-target="dashboardSection">Dashboard</li>
             <li class="sidebar-item" data-target="usersSection">Users</li>
             <li class="sidebar-item" data-target="adminsSection">Admins</li>
+            <li class="sidebar-item" data-target="statisticsSection">Statistics</li>
             <li class="sidebar-item" data-target="ordersSection">Orders</li>
             <li class="sidebar-item" id="goToProfile">Profile</li>
             <li id="logoutBtn">Logout</li>
@@ -115,6 +116,11 @@
                 </thead>
                 <tbody id="allAdminsTable"></tbody>
             </table>
+        </section>
+
+        <section id="statisticsSection" class="dashboard-section" style="display:none;">
+            <h2>Regional Statistics</h2>
+            <div id="statsGrid" class="stats-grid"></div>
         </section>
 
         <section id="ordersSection" class="dashboard-section" style="display:none;">
