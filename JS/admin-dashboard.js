@@ -7,17 +7,30 @@ const db = getFirestore();
 // 1. Statistics Data & Rendering
 // ==========================================
 
-const cities = {
-    khamis_mushait: { coords: [18.3029, 42.7297], name: "مدينة خميس مشيط" },
-    abha: { coords: [18.2164, 42.5053], name: "مدينة أبها" },
-    al_mansak: { coords: [18.2216, 42.5278], name: "حي المنسك" },
-    al_badea: { coords: [18.2071, 42.5172], name: "حي البديع" },
-    king_khalid_uni: { coords: [18.2128, 42.6547], name: "جامعة الملك خالد - الفرعاء" },
-    al_harir: { coords: [18.2923, 42.6930], name: "حي الهرير" },
-    al_rasras: { coords: [18.2220, 42.5005], name: "حي الرصراص" },
-    al_safq: { coords: [18.2881, 42.7072], name: "حي الصفق" },
-    king_faisal_city: { coords: [18.2935, 42.6484], name: "مدينة الملك فيصل العسكرية" }
-};
+const regionalData = [
+    {
+        id: "khamis_mushait",
+        name: "مدينة خميس مشيط",
+        coords: [18.3029, 42.7297],
+        neighborhoods: [
+            { name: "حي البديع", coords: [18.2071, 42.5172] },
+            { name: "حي الهرير", coords: [18.2923, 42.6930] },
+            { name: "حي الصفق", coords: [18.2881, 42.7072] },
+            { name: "مدينة الملك فيصل العسكرية", coords: [18.2935, 42.6484] }
+        ]
+    },
+    {
+        id: "abha",
+        name: "مدينة أبها",
+        coords: [18.2164, 42.5053],
+        neighborhoods: [
+            { name: "حي المنسك", coords: [18.2216, 42.5278] },
+            { name: "حي الرصراص", coords: [18.2220, 42.5005] },
+            { name: "جامعة الملك خالد - الفرعاء", coords: [18.2128, 42.6547] }
+        ]
+    }
+];
+
 
 function renderStatistics() {
     const grid = document.getElementById('statsGrid');
@@ -25,21 +38,63 @@ function renderStatistics() {
 
     grid.innerHTML = '';
 
-    Object.values(cities).forEach(city => {
-        const percentage = Math.floor(Math.random() * 100);
-        const degree = percentage * 3.6;
+    regionalData.forEach(city => {
+        const cityPercentage = Math.floor(Math.random() * 100);
+        const cityDegree = cityPercentage * 3.6;
+        const neighborhoodsHTML = city.neighborhoods.map(hood => {
+            const hoodPercentage = Math.floor(Math.random() * 100);
+
+            let barColor = '#52796f';
+            if (hoodPercentage < 40) barColor = '#e76f51';
+            else if (hoodPercentage < 75) barColor = '#f4a261';
+
+            return `
+                <li class="neighborhood-item">
+                    <div class="neighborhood-info">
+                        <span>${hood.name}</span>
+                        <svg class="location-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </div>
+
+                    <div class="neighborhood-stats">
+                        <span class="percent-text" style="color:${barColor}">${hoodPercentage}%</span>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: ${hoodPercentage}%; background-color: ${barColor};"></div>
+                        </div>
+                    </div>
+                </li>
+            `;
+        }).join('');
 
         const card = document.createElement('div');
         card.className = 'stat-card';
         card.innerHTML = `
-            <h3>${city.name}</h3>
-            <div class="progress-circle" style="background: conic-gradient(#52796f ${degree}deg, #e0e0e0 0deg);">
-                <span class="progress-value">${percentage}%</span>
+            <div class="stat-header">
+                <div class="city-info">
+                    <h3>${city.name}</h3>
+                    <p style="opacity:0.9; font-size:0.8rem;">Statistics Overview</p>
+                </div>
+                <div class="header-progress">
+                    <div class="header-progress-circle" 
+                        style="background: conic-gradient(#ffffff ${cityDegree}deg, rgba(255,255,255,0.15) 0deg);">
+                    </div>
+                    <div style="position:absolute; width: 58px; height: 58px; background: #52796f; border-radius:50%; box-shadow:inset 0 0 10px rgba(0,0,0,0.2);"></div>
+                    <span class="header-progress-value">${cityPercentage}%</span>
+                </div>
+            </div>
+
+            <div class="stat-body">
+                <ul class="neighborhood-list">
+                    ${neighborhoodsHTML}
+                </ul>
             </div>
         `;
         grid.appendChild(card);
     });
 }
+
+renderStatistics();
 
 // ==========================================
 // 2. Sidebar & Navigation
@@ -100,7 +155,6 @@ async function fetchData() {
     const allAdminsTable = document.getElementById("allAdminsTable");
     const ordersTable = document.getElementById("ordersTable");
 
-    // Clear tables
     if (usersTable) usersTable.innerHTML = "";
     if (adminsTable) adminsTable.innerHTML = "";
     if (allUsersTable) allUsersTable.innerHTML = "";
@@ -198,6 +252,5 @@ async function fetchData() {
     if (totalAdminCoinsEl) totalAdminCoinsEl.textContent = totalAdminCoins;
 }
 
-// Initialize
 fetchData();
 renderStatistics();
